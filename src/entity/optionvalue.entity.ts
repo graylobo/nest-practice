@@ -6,6 +6,7 @@ import {
   Unique,
 } from 'typeorm';
 import { Option } from './option.entity';
+import { Category } from './category.entity';
 @Entity()
 @Unique(['value'])
 export class OptionValue {
@@ -17,4 +18,7 @@ export class OptionValue {
 
   @ManyToOne(() => Option, (option) => option.values)
   option: Option;
+  // 카테고리 관계 추가
+  @ManyToOne(() => Category)
+  category: Category;
 }
