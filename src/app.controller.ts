@@ -6,12 +6,12 @@ import {
   NotFoundException,
   Param,
 } from '@nestjs/common';
-import { AppService } from './app.service';
 import { AppDataSource } from 'libs/database/src/app-data-source';
+import { Repository } from 'typeorm';
+import { AppService } from './app.service';
 import { Category } from './entity/category.entity';
 import { Option } from './entity/option.entity';
 import { OptionValue } from './entity/optionvalue.entity';
-import { Repository } from 'typeorm';
 
 @Controller()
 export class AppController {
