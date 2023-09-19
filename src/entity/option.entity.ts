@@ -9,11 +9,11 @@ import {
 import { Category } from './category.entity';
 import { OptionValue } from './optionvalue.entity';
 
-@Entity()
+@Entity('Option')
 @Unique(['name'])
 export class Option {
   @PrimaryGeneratedColumn()
-  id: number;
+  caca: number;
 
   @Column()
   name: string; // 색상, 사이즈 등
@@ -23,6 +23,6 @@ export class Option {
   })
   values: OptionValue[];
 
-  @ManyToMany(() => Category, (category) => category.options)
-  categories: Category[];
+  // @ManyToMany(() => Category, (category) => category.options)
+  // categories: Category[];
 }

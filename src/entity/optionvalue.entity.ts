@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 import { Option } from './option.entity';
 import { Category } from './category.entity';
-@Entity()
-@Unique(['value'])
+@Entity('OptionValue')
+@Unique(['id', 'value'])
 export class OptionValue {
   @PrimaryGeneratedColumn()
   id: number;

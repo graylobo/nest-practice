@@ -2,10 +2,10 @@ import { IsArray, IsEnum } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export enum REQUEST_TYPE {
   PURCHASE = 'PURCHASE',
-  Horse = 'PAPA1',
+  Horse = 'PAPA11',
 }
 
-@Entity()
+@Entity('CodeTest')
 export class Test {
   @PrimaryGeneratedColumn()
   id: number;

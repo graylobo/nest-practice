@@ -16,11 +16,11 @@ import { OptionValue } from './entity/optionvalue.entity';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
-  private readonly categoryRepository: Repository<Category> =
+  private categoryRepository: Repository<Category> =
     AppDataSource.getRepository(Category);
-  private readonly optionRepository: Repository<Option> =
+  private optionRepository: Repository<Option> =
     AppDataSource.getRepository(Option);
-  private readonly optionValueRepository: Repository<OptionValue> =
+  private optionValueRepository: Repository<OptionValue> =
     AppDataSource.getRepository(OptionValue);
 
   @Get()
@@ -46,25 +46,14 @@ export class AppController {
       relations: ['options'],
     });
 
+    console.log('cate', category);
     if (!category) {
       throw new NotFoundException(
         `카테고리 ${categoryName}이(가) 존재하지 않습니다1.`,
       );
     }
 
-    const optionsWithValues = await Promise.all(
-      category.options.map(async (option) => {
-        const optionValues = await this.optionValueRepository.find({
-          where: { option: { id: option.id }, category: { id: category.id } },
-        });
-        return {
-          optionName: option.name,
-          optionValues: optionValues.map((ov) => ov.value),
-        };
-      }),
-    );
-
-    return optionsWithValues;
+    return category;
   }
 }
 
@@ -76,41 +65,54 @@ async function createCategory(name: string): Promise<Category> {
 }
 
 async function seedDatabase() {
-  const clothingCategory = await createCategory('의류');
-  const shoeCategory = await createCategory('신발');
+  const category1 = await createCategory('카테고리1');
+  const category2 = await createCategory('카테고리2');
+  const category3 = await createCategory('카테고리3');
 
-  const sizeOption = new Option();
-  sizeOption.name = '사이즈';
-  await AppDataSource.manager.save(sizeOption);
+  console.log('드루');
+  const option1 = await createOption('옵션1');
+  const option2 = await createOption('옵션2');
+  const option3 = await createOption('옵션3');
+  console.log('드루2');
 
-  await createOptionValueForCategory('L', sizeOption, clothingCategory);
-  await createOptionValueForCategory('M', sizeOption, clothingCategory);
-  await createOptionValueForCategory('230mm', sizeOption, shoeCategory);
-  await createOptionValueForCategory('240mm', sizeOption, shoeCategory);
+  // 카테고리1 선택시= 옵션1, 옵션2 선택가능
+  await linkCategoryToOption(category1, [option1, option2]);
+  console.log('드루3');
+  console.log('드루4');
+
+  // 카테고리2 선택시 = 옵션2, 옵션3 선택가능
+  await linkCategoryToOption(category2, [option2, option3]);
+  console.log('드루5');
+
+  // 카테고리3 선택시 =옵션1, 옵션3 선택가능
+  await linkCategoryToOption(category3, [option1, option3]);
+  console.log('드루6');
 }
-async function createOptionValueForCategory(
-  value: string,
-  option: Option,
-  category: Category,
-): Promise<OptionValue> {
-  const optionValue = new OptionValue();
-  optionValue.value = value;
-  optionValue.option = option;
-  optionValue.category = category; // 이 줄을 추가합니다.
-  await AppDataSource.manager.save(optionValue);
+async function createOption(name: string): Promise<Option> {
+  const option = new Option();
+  option.name = name;
+  await AppDataSource.manager.save(option);
 
+  return option;
+}
+
+async function linkCategoryToOption(category: Category, options: Option[]) {
   if (!category.options) category.options = [];
-  category.options.push(option);
-  await AppDataSource.manager.save(category);
 
-  return optionValue;
+  options.forEach((option) => {
+    category.options.push(option);
+  });
+
+  await AppDataSource.manager.save(category);
 }
+
 function handleDatabaseError(error: any) {
+  console.log(error);
   if (error.code === '23505') {
     // Unique Constraint violation in PostgreSQL
-    throw new ConflictException('중복된 데이터입니다.!');
+    throw new ConflictException('중복된 데이터입니다.11!');
   }
   throw new InternalServerErrorException(
-    '데이터 삽입 중 오류가 발생했습니다1.',
+    '데이터 삽입 중 오류가 발생했습니다..1',
   );
 }
