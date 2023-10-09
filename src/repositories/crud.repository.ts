@@ -8,6 +8,7 @@ export class CrudRepository extends Repository<Crud> {
   async createCrud(crudDto: CreateCrudDto): Promise<void> {
     const hscode = this.create(); // createQueryBuilder 대신 repository의 기본 메서드 사용
     hscode.name = crudDto?.name ? crudDto?.name : 'default value';
+
     await this.save(hscode);
   }
 }

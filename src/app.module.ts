@@ -7,6 +7,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TestcodeModule } from './testcode/testcode.module';
 import { CrudModule } from './controller/crud/crud.module';
+import { SchoolModule } from './controller/school/school.module';
+import { StudentModule } from './controller/student/student.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { CrudModule } from './controller/crud/crud.module';
     AuthModule,
     TestcodeModule,
     CrudModule,
+    SchoolModule,
+    StudentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
