@@ -1,12 +1,10 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
+  Entity,
   OneToMany,
+  PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Category } from './category.entity';
 import { OptionValue } from './optionvalue.entity';
 
 @Entity('Option')
