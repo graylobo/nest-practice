@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class CreateSchoolDto {
+export class CreateHscodeDto {
   @IsString()
-  name?: string;
+  value: string;
 }
