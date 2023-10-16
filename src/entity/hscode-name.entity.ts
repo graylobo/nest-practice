@@ -6,8 +6,6 @@ import {
   Unique,
 } from 'typeorm';
 @Entity()
-@Unique(['korean'])
-@Unique(['english'])
 export class HsCodeName extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

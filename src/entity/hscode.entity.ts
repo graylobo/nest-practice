@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   Unique,
@@ -13,6 +14,7 @@ import { Origin } from './origin.entity';
 import { Year } from './year.entity';
 import { StandardTariff } from './standard-tariff';
 import { AseanTariff } from './asean-tariff';
+import { HsCodeName } from './hscode-name.entity';
 @Entity()
 @Unique(['value'])
 export class HScode extends BaseEntity {
@@ -22,23 +24,26 @@ export class HScode extends BaseEntity {
   @Column()
   value: string;
 
-  @OneToOne(() => Origin)
+  @ManyToOne(() => Origin)
   @JoinColumn()
   origin: Origin;
+  @ManyToOne(() => HsCodeName)
+  @JoinColumn()
+  name: HsCodeName;
 
-  @OneToOne(() => Basic)
+  @ManyToOne(() => Basic)
   @JoinColumn()
   basic: Basic;
   @JoinColumn()
-  @OneToOne(() => Add)
+  @ManyToOne(() => Add)
   add: Add;
-  @OneToOne(() => StandardTariff)
+  @ManyToOne(() => StandardTariff)
   @JoinColumn()
   standardTariff: StandardTariff;
-  @OneToOne(() => AseanTariff)
+  @ManyToOne(() => AseanTariff)
   @JoinColumn()
   aseanTariff: AseanTariff;
-  @OneToOne(() => Year)
+  @ManyToOne(() => Year)
   @JoinColumn()
   year: Year;
 }
