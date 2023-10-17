@@ -25,9 +25,9 @@ export class Hscode {
   @Column()
   name: string;
 
-  @Column('double')
+  @Column()
   standardTariff: number;
 
-  @Column('double')
+  @Column()
   aseanTariff: number;
 }

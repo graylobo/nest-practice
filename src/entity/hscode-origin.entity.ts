@@ -4,11 +4,9 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import { Hscode } from './hscode.entity';
 @Entity('HSCodeOrigin')
-@Unique(['value'])
 export class HSCodeOrigin extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
