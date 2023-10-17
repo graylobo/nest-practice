@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CreateHscodeDto } from './dto/create-hscode.dto';
-import { HscodeService } from './hscode.service';
 import { AppDataSource } from 'libs/database/src/app-data-source';
+import { ExcelService } from 'libs/excel/src';
+import * as path from 'path';
 import {
   Add,
   AseanTariff,
@@ -11,10 +11,10 @@ import {
   StandardTariff,
   Year,
 } from 'src/entity';
-import { ExcelService } from 'libs/excel/src';
-import * as path from 'path';
 import { HsCodeName } from 'src/entity/hscode-name.entity';
 import { HSCodeOrigin } from 'src/entity/hscode-origin.entity';
+import { CreateHscodeDto } from './dto/create-hscode.dto';
+import { HscodeService } from './hscode.service';
 @Controller('hscode')
 export class HscodeController {
   constructor(
@@ -186,7 +186,7 @@ export class HscodeController {
   @Get('excel')
   getExcelData() {
     const filePath = path.join('./', 'hscode.xlsx');
-    const test = this.excelService.readExcelFile(filePath);
+    const hscodeDatas = this.excelService.readExcelFile(filePath);
     const originSet = new Set();
     const basicSet = new Set();
     const addSet = new Set();
@@ -196,16 +196,22 @@ export class HscodeController {
     const basicTarrifSet = new Set();
     const aseanTarrifSet = new Set();
 
-    test.forEach((elem) => {
-      originSet.add(elem[0]);
-      basicSet.add(elem[1]);
-      addSet.add(elem[2]);
-      yearSet.add(elem[3]);
-      koreanSet.add(elem[5]);
-      englishSet.add(elem[6]);
-      basicTarrifSet.add(elem[7]);
-      aseanTarrifSet.add(elem[8]);
-    });
+    let count = 0;
+
+    for (const hscode of hscodeDatas) {
+      if (count === 0) {
+        count = 1;
+        continue;
+      }
+      originSet.add(hscode[0]);
+      basicSet.add(hscode[1]);
+      addSet.add(hscode[2]);
+      yearSet.add(hscode[3]);
+      koreanSet.add(hscode[5]);
+      englishSet.add(hscode[6]);
+      basicTarrifSet.add(hscode[7]);
+      aseanTarrifSet.add(hscode[8]);
+    }
 
     const originSetRes = Array.from(originSet)
       .filter((e) => e !== null && e !== undefined)
