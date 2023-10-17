@@ -1,49 +1,33 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
-import { Add } from './add.entity';
-import { Basic } from './basic.entity';
-import { Origin } from './origin.entity';
-import { Year } from './year.entity';
-import { StandardTariff } from './standard-tariff';
-import { AseanTariff } from './asean-tariff';
-import { HsCodeName } from './hscode-name.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Country } from './country.entity';
+import { HSCodeOrigin } from '.';
+
 @Entity()
-@Unique(['value'])
-export class HScode extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class Hscode {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => HSCodeOrigin, (originCode) => originCode.hscodes)
+  originCode: HSCodeOrigin;
+
+  @ManyToOne(() => Country, (country) => country.hscodes)
+  country: Country;
 
   @Column()
-  value: string;
+  year: string;
 
-  @ManyToOne(() => Origin)
-  @JoinColumn()
-  origin: Origin;
-  @ManyToOne(() => HsCodeName)
-  @JoinColumn()
-  name: HsCodeName;
+  @Column({ nullable: true })
+  additionalCode: string;
 
-  @ManyToOne(() => Basic)
-  @JoinColumn()
-  basic: Basic;
-  @JoinColumn()
-  @ManyToOne(() => Add)
-  add: Add;
-  @ManyToOne(() => StandardTariff)
-  @JoinColumn()
-  standardTariff: StandardTariff;
-  @ManyToOne(() => AseanTariff)
-  @JoinColumn()
-  aseanTariff: AseanTariff;
-  @ManyToOne(() => Year)
-  @JoinColumn()
-  year: Year;
+  @Column()
+  combinedCode: string; // This can be computed based on originCode and additionalCode
+
+  @Column()
+  name: string;
+
+  @Column('double')
+  standardTariff: number;
+
+  @Column('double')
+  aseanTariff: number;
 }
