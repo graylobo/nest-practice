@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ExcelService } from 'libs/excel/src';
 import { HscodeService } from './hscode.service';
 import { AppDataSource } from 'libs/database/src/app-data-source';
@@ -152,5 +152,36 @@ export class HscodeController {
       }
     }
     return 'fin1';
+  }
+
+  @Get('find')
+  async findHscode(@Query() params) {
+    let product = null;
+    try {
+      const query = AppDataSource.manager
+        .createQueryBuilder(Hscode, 'hscode')
+        .leftJoinAndSelect('hscode.originCode', 'originCode')
+        .leftJoinAndSelect('hscode.country', 'country')
+        .leftJoinAndSelect('hscode.year', 'year')
+        .leftJoinAndSelect('hscode.additionalCode', 'additionalCode')
+        .leftJoinAndSelect('hscode.name', 'krname')
+        .leftJoinAndSelect('hscode.standardTariff', 'standardTariff')
+        .leftJoinAndSelect('hscode.aseanTariff', 'aseanTariff');
+
+      if (params.country) {
+        query.andWhere('country.name = :name', { name: params.country });
+      }
+      if (params.korean) {
+        query.andWhere('krname.korean = :korean', { korean: params.korean });
+      }
+      product = query.getMany();
+      console.log(product);
+    } catch (error) {
+      console.log('에래', error);
+    }
+
+    // 이제 `product` 객체에는 연관된 모든 정보가 포함되어 있습니다.
+    // 필요에 따라 추가 처리나 출력을 수행할 수 있습니다.
+    return product;
   }
 }
