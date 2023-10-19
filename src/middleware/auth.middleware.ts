@@ -4,7 +4,6 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    // 논리합 연산자 -> 왼쪽 피연산자가 false라면 오른쪽 피연산자가 실행
     // const name: string = req.query.name || req.body.name;
 
     next();

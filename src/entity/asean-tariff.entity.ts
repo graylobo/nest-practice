@@ -7,13 +7,13 @@ import {
 } from 'typeorm';
 import { Hscode } from './hscode.entity';
 
-@Entity('Country')
-export class Country extends BaseEntity {
+@Entity('AseanTariff')
+export class AseanTariff extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
-  name: string;
+  @Column({ unique: true, type: 'double precision' })
+  value: number;
 
   @OneToMany(() => Hscode, (hscode) => hscode.country)
   hscodes: Hscode[];

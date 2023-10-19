@@ -1,33 +1,34 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Country } from './country.entity';
-import { HSCodeOrigin } from '.';
+import { HSCodeCountry, HSCodeName, HSCodeOrigin, Year } from '.';
+import { StandardTariff } from './standard-tariff.entity';
+import { AseanTariff } from './asean-tariff.entity';
 
 @Entity()
 export class Hscode {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
+  @Column({ unique: true })
+  combinedCode: string;
   @ManyToOne(() => HSCodeOrigin, (originCode) => originCode.hscodes)
   originCode: HSCodeOrigin;
 
   @ManyToOne(() => Country, (country) => country.hscodes)
   country: Country;
 
-  @Column()
-  year: string;
+  @ManyToOne(() => Year, (year) => year.hscodes)
+  year: Year;
 
-  @Column({ nullable: true })
-  additionalCode: string;
+  @ManyToOne(() => HSCodeCountry, (countryCode) => countryCode.hscodes)
+  additionalCode: HSCodeCountry;
 
-  @Column()
-  combinedCode: string; // This can be computed based on originCode and additionalCode
+  @ManyToOne(() => HSCodeName, (hscodeName) => hscodeName.hscodes)
+  name: HSCodeName;
 
-  @Column()
-  name: string;
+  @ManyToOne(() => StandardTariff, (standardTariff) => standardTariff.hscodes)
+  standardTariff: StandardTariff;
 
-  @Column()
-  standardTariff: number;
-
-  @Column()
-  aseanTariff: number;
+  @ManyToOne(() => AseanTariff, (aseanTariff) => aseanTariff.hscodes)
+  aseanTariff: AseanTariff;
 }

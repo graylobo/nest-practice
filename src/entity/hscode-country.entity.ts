@@ -6,15 +6,14 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Hscode } from './hscode.entity';
-
-@Entity('Country')
-export class Country extends BaseEntity {
+@Entity('HSCodeCountry')
+export class HSCodeCountry extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ unique: true })
-  name: string;
+  code: string;
 
-  @OneToMany(() => Hscode, (hscode) => hscode.country)
+  @OneToMany(() => Hscode, (hscode) => hscode.originCode)
   hscodes: Hscode[];
 }
