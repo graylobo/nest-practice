@@ -180,41 +180,24 @@ export class HscodeController {
           'standardTariff.value',
           'aseanTariff.value',
         ]);
-
-      if (params.hscode) {
-        query.andWhere('hscode.hscode = :hscode', {
-          hscode: params.hscode,
-        });
-      }
-      if (params.originCode) {
-        query.andWhere('originCode.code = :code', { code: params.originCode });
-      }
       if (params.country) {
         query.andWhere('country.name = :name', { name: params.country });
       }
-      if (params.year) {
-        query.andWhere('year.year = :year', { year: params.year });
+
+      if (params.inquiryValue) {
+        const isHscode = !isNaN(Number(params.inquiryValue));
+        if (isHscode) {
+          query.andWhere('hscode.hscode LIKE :value', {
+            value: `${params.inquiryValue}%`,
+          });
+        } else {
+          query.andWhere('hscodeName.korean LIKE :value', {
+            value: `%${params.inquiryValue}%`,
+          });
+        }
       }
-      if (params.additionalCode) {
-        query.andWhere('additionalCode.code = :code', {
-          code: params.additionalCode,
-        });
-      }
-      if (params.name) {
-        query.andWhere('hscodeName.korean = :korean', { korean: params.name });
-      }
-      if (params.standardTariff) {
-        query.andWhere('standardTariff.value = :value', {
-          value: params.standardTariff,
-        });
-      }
-      if (params.aseanTariff) {
-        query.andWhere('aseanTariff.value = :value', {
-          value: params.aseanTariff,
-        });
-      }
-      product = query.getMany();
-      console.log(product);
+
+      product = await query.getMany();
     } catch (error) {
       console.log('error', error);
     }

@@ -25,4 +25,7 @@ export class GetHscodeReqDto {
   @IsNumber()
   @IsOptional()
   aseanTariff: number;
+  @IsString()
+  @IsOptional()
+  inquiryValue: string;
 }
