@@ -1,17 +1,18 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ExcelService } from 'libs/excel/src';
-import { HscodeService } from './hscode.service';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AppDataSource } from 'libs/database/src/app-data-source';
+import { ExcelService } from 'libs/excel/src';
 import {
   AseanTariff,
   Country,
-  HSCodeCountry,
   HSCodeName,
   HSCodeOrigin,
   Hscode,
   StandardTariff,
 } from 'src/entity';
+import { HSCodeAddionalCode } from 'src/entity/hscode-additional-code.entity';
 import { Year } from 'src/entity/year.entity';
+import { GetHscodeReqDto } from './dto/get-hscode.req.dto';
+import { HscodeService } from './hscode.service';
 @Controller('hscode')
 export class HscodeController {
   constructor(
@@ -83,7 +84,7 @@ export class HscodeController {
 
     await AppDataSource.manager.save(Country, countryCodeArray);
     await AppDataSource.manager.save(HSCodeOrigin, originCodeArray);
-    await AppDataSource.manager.save(HSCodeCountry, additionalCodeArray);
+    await AppDataSource.manager.save(HSCodeAddionalCode, additionalCodeArray);
     await AppDataSource.manager.save(Year, yearArray);
     await AppDataSource.manager.save(HSCodeName, hscodeNameArray);
     await AppDataSource.manager.save(StandardTariff, standardTariffArray);
@@ -107,7 +108,7 @@ export class HscodeController {
         aseanTariff,
       ] = data[i];
       const resHscode = await AppDataSource.manager.findOne(Hscode, {
-        where: { combinedCode },
+        where: { hscode: combinedCode },
       });
 
       if (!resHscode) {
@@ -119,7 +120,7 @@ export class HscodeController {
           { where: { code: originCode } },
         );
         const resHSCodeCountry = await AppDataSource.manager.findOne(
-          HSCodeCountry,
+          HSCodeAddionalCode,
           { where: { code: additionalCode } },
         );
         const resYear = await AppDataSource.manager.findOne(Year, {
@@ -140,7 +141,7 @@ export class HscodeController {
         );
 
         const hscode = new Hscode();
-        hscode.combinedCode = combinedCode;
+        hscode.hscode = combinedCode;
         hscode.country = resCountry;
         hscode.originCode = resHSCodeOrigin;
         hscode.additionalCode = resHSCodeCountry;
@@ -151,12 +152,13 @@ export class HscodeController {
         await AppDataSource.manager.save(hscode);
       }
     }
-    return 'fin1';
+    return 'fin11';
   }
 
   @Get('find')
-  async findHscode(@Query() params) {
+  async findHscode(@Query() params: GetHscodeReqDto) {
     let product = null;
+
     try {
       const query = AppDataSource.manager
         .createQueryBuilder(Hscode, 'hscode')
@@ -164,24 +166,59 @@ export class HscodeController {
         .leftJoinAndSelect('hscode.country', 'country')
         .leftJoinAndSelect('hscode.year', 'year')
         .leftJoinAndSelect('hscode.additionalCode', 'additionalCode')
-        .leftJoinAndSelect('hscode.name', 'krname')
+        .leftJoinAndSelect('hscode.name', 'hscodeName')
         .leftJoinAndSelect('hscode.standardTariff', 'standardTariff')
-        .leftJoinAndSelect('hscode.aseanTariff', 'aseanTariff');
+        .leftJoinAndSelect('hscode.aseanTariff', 'aseanTariff')
+        .select([
+          'hscode.hscode',
+          'originCode.code',
+          'country.name',
+          'year.year',
+          'additionalCode.code',
+          'hscodeName.korean',
+          'hscodeName.english',
+          'standardTariff.value',
+          'aseanTariff.value',
+        ]);
 
+      if (params.hscode) {
+        query.andWhere('hscode.hscode = :hscode', {
+          hscode: params.hscode,
+        });
+      }
+      if (params.originCode) {
+        query.andWhere('originCode.code = :code', { code: params.originCode });
+      }
       if (params.country) {
         query.andWhere('country.name = :name', { name: params.country });
       }
-      if (params.korean) {
-        query.andWhere('krname.korean = :korean', { korean: params.korean });
+      if (params.year) {
+        query.andWhere('year.year = :year', { year: params.year });
+      }
+      if (params.additionalCode) {
+        query.andWhere('additionalCode.code = :code', {
+          code: params.additionalCode,
+        });
+      }
+      if (params.name) {
+        query.andWhere('hscodeName.korean = :korean', { korean: params.name });
+      }
+      if (params.standardTariff) {
+        query.andWhere('standardTariff.value = :value', {
+          value: params.standardTariff,
+        });
+      }
+      if (params.aseanTariff) {
+        query.andWhere('aseanTariff.value = :value', {
+          value: params.aseanTariff,
+        });
       }
       product = query.getMany();
       console.log(product);
     } catch (error) {
-      console.log('에래', error);
+      console.log('error', error);
     }
 
-    // 이제 `product` 객체에는 연관된 모든 정보가 포함되어 있습니다.
-    // 필요에 따라 추가 처리나 출력을 수행할 수 있습니다.
     return product;
   }
 }

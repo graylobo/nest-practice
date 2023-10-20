@@ -6,8 +6,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Hscode } from './hscode.entity';
-@Entity('HSCodeCountry')
-export class HSCodeCountry extends BaseEntity {
+@Entity('HSCodeAddionalCode')
+export class HSCodeAddionalCode extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

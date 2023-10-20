@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Country } from './country.entity';
-import { HSCodeCountry, HSCodeName, HSCodeOrigin, Year } from '.';
+import { HSCodeAddionalCode, HSCodeName, HSCodeOrigin, Year } from '.';
 import { StandardTariff } from './standard-tariff.entity';
 import { AseanTariff } from './asean-tariff.entity';
 
@@ -10,7 +10,7 @@ export class Hscode {
   id: string;
 
   @Column({ unique: true })
-  combinedCode: string;
+  hscode: string;
   @ManyToOne(() => HSCodeOrigin, (originCode) => originCode.hscodes)
   originCode: HSCodeOrigin;
 
@@ -20,8 +20,11 @@ export class Hscode {
   @ManyToOne(() => Year, (year) => year.hscodes)
   year: Year;
 
-  @ManyToOne(() => HSCodeCountry, (countryCode) => countryCode.hscodes)
-  additionalCode: HSCodeCountry;
+  @ManyToOne(
+    () => HSCodeAddionalCode,
+    (additionalCode) => additionalCode.hscodes,
+  )
+  additionalCode: HSCodeAddionalCode;
 
   @ManyToOne(() => HSCodeName, (hscodeName) => hscodeName.hscodes)
   name: HSCodeName;

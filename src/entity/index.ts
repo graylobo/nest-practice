@@ -4,5 +4,5 @@ export { Country } from './country.entity';
 export { StandardTariff } from './standard-tariff.entity';
 export { AseanTariff } from './asean-tariff.entity';
 export { HSCodeName } from './hscode-name.entity';
-export { HSCodeCountry } from './hscode-country.entity';
+export { HSCodeAddionalCode } from './hscode-additional-code.entity';
 export { Year } from './year.entity';
