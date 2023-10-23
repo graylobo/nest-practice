@@ -4,7 +4,7 @@ import { HSCodeAddionalCode, HSCodeName, HSCodeOrigin, Year } from '.';
 import { StandardTariff } from './standard-tariff.entity';
 import { AseanTariff } from './asean-tariff.entity';
 
-@Entity()
+@Entity('HSCode')
 export class Hscode {
   @PrimaryGeneratedColumn('uuid')
   id: string;
