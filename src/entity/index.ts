@@ -6,3 +6,4 @@ export { AseanTariff } from './asean-tariff.entity';
 export { HSCodeName } from './hscode-name.entity';
 export { HSCodeAddionalCode } from './hscode-additional-code.entity';
 export { Year } from './year.entity';
+export { Category } from './category.entity';

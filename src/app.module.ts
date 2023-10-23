@@ -6,12 +6,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { HscodeModule } from './controller/hscode/hscode.module';
+import { CategoryModule } from './controller/category/category.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeORMConfig), // TypeORM 설정 파일 연결
     AuthModule,
     HscodeModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
