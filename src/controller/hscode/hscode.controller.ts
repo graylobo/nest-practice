@@ -20,6 +20,7 @@ export class HscodeController {
     private readonly excelService: ExcelService,
   ) {}
 
+  // hscode를 넣기 전에 아래 코드부터 수행해야함 (hscode insert에 필요한 연관 엔티티의 데이터삽입)
   @Get('insert')
   async insertEtc() {
     const data = this.excelService.readExcelFile('hscode.xlsx');
@@ -92,6 +93,7 @@ export class HscodeController {
     return 'fin!!';
   }
 
+  // 수행전 위 연관엔터티 데이터 삽입부터 진행해야함
   @Get('insert/hs')
   async insertHscode() {
     const data = this.excelService.readExcelFile('hscode.xlsx');
